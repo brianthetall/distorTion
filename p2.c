@@ -2,9 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
-#define DEBUG 1
+#define DEBUG 0
 #define LINE 255
-#define Z 200
+#define Z 50
 #define ARGS 3
 int main(int argc,char *argv[])
 {
@@ -54,9 +54,11 @@ int main(int argc,char *argv[])
 
       //compute a^Im%m.... it should ==1 if should hold was TRUE
       math1=(int)pow(i,Im);
-      if(DEBUG)printf("i^Im=%d\r\n",math1);
+      printf("i^Im=%d\r\n",math1);
       math2=math1%m;
-      if(DEBUG)printf("i^Im\%m=%d\r\n",math2);
+      printf("i^Im MOD m=%d\r\n",math2);
+      if(math2==1)
+	printf("Euler THM Holds\r\n");
       
       s[0]='\0';
     }
