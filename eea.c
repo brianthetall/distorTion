@@ -3,7 +3,7 @@
 #include <string.h>
 #include <math.h>
 #define LINE 255
-#define DEBUG 1
+#define DEBUG 0
 #define ARGS 3
 int main(int argc,char *argv[])
 {
