@@ -73,6 +73,10 @@ int main(int argc, char *argv[])
 		      if(DEBUG)printf("Generator:%d; Z*%d is cyclic group\r\n",backup[i],value);
 		      break;//break from loop
 		    }
+		  else if(temp==1)
+		    {
+		      break;//this element of G is not a generator
+		    }
 		}
 		
 	      }
