@@ -13,6 +13,7 @@ Identify if any of the elements are generators.
 #define LINE 255
 #define ARGS 2
 
+unsigned int squareMult(unsigned int, unsigned int, int);
 int main(int argc, char *argv[])
 {
 	char *s;
@@ -96,14 +97,65 @@ int main(int argc, char *argv[])
 	      }
 	    
 	  }
-	
 	printf("PossibleElementOrders:\r\n");
-	//	possibleElementOrdersBase[0]=1;
-	//	printf("%d\r\n",possibleElementOrdersBase[0]);
 	printf("1\r\n");
 	for(i=0;possibleElementOrdersBase[i]!='\0';i++)
 	  {
 	    printf("%d\r\n",possibleElementOrdersBase[i]);
 	  }
+	/*
+	if(DEBUG)printf("debug squareMult=%x\r\n",squareMult(2,1,value));
+	if(DEBUG)printf("debug squareMult=%x\r\n",squareMult(2,2,value));
+	if(DEBUG)printf("debug squareMult=%x\r\n",squareMult(2,3,value));
+	if(DEBUG)printf("debug squareMult=%x\r\n",squareMult(2,4,value));
+	if(DEBUG)printf("debug squareMult=%x\r\n",squareMult(2,5,value));
+	*/
+	if(DEBUG)printf("math.h=%u\tdebug squareMult=%u\r\n",(unsigned int)pow(3,4)%11,squareMult(3,4,value));
+	if(DEBUG)printf("math.h=%u\tdebug squareMult=%u\r\n",(unsigned int)pow(2,16)%11,squareMult(2,16,value));
+	if(DEBUG)printf("math.h=%u\tdebug squareMult=%u\r\n",(unsigned int)pow(2,64)%11,squareMult(2,64,value));
+	if(DEBUG)printf("math.h=%u\tdebug squareMult=%u\r\n",(unsigned int)pow(2,199)%11,squareMult(2,199,value));
 	return 0;
+}
+unsigned int squareMult(unsigned int base, unsigned int exponent,int modulus)
+{
+  unsigned int retval=0;
+  int i,index=(int)(sizeof(unsigned int)*8)-1;
+  unsigned int mask=0x80000000;
+  if(DEBUG)printf("base=%u exponent=%u modulus=%d index=%d mask=%x\r\n",base,exponent,modulus,index,mask);
+  for(i=0;i<sizeof(unsigned int)*8;i++)
+    {
+      if((exponent&mask)>0)
+	{
+	  printf(".");
+	  if(DEBUG)printf("index=%d\r\n",index);
+	  //	  return index;//have found the first non-zero bit in exponent
+	  break;
+	}
+      else
+	{
+	  index--;
+	  mask=mask>>1;
+	}
+    }
+  //index has what i need
+  retval=base;//the first 1 from exponent
+  if(DEBUG)printf("retval=%u\r\n",retval);
+  mask=mask>>1;
+  for(i=index-1;i>=0;i--)
+    {
+      retval=pow(retval,2);
+      //      if(DEBUG)printf("tempretval=%u\r\n",retval);
+      retval=retval % modulus;
+      if(DEBUG)printf("square mod modulus=%u\r\n",retval);
+      if((exponent&mask)>0)
+	{
+	  //	  if(DEBUG)printf("mask=%x\r\n",mask);
+	  retval=retval*base;
+	  retval=retval % modulus;
+	  if(DEBUG)printf("Mult mod modulus=%u\r\n",retval);
+	}
+      if(DEBUG)printf("maskForPrevious=%x\r\n",mask);
+      mask=mask>>1;
+    }
+  return retval;
 }
