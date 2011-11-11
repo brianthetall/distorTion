@@ -9,7 +9,7 @@ Identify if any of the elements are generators.
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
-#define DEBUG 1
+#define DEBUG 0
 #define LINE 255
 #define ARGS 2
 
@@ -66,18 +66,20 @@ int main(int argc, char *argv[])
 		  }
 		else{
 		  orderElementCount++;
-		  temp=(unsigned int)pow(backup[i],j)%value;//need to write the sum-square function, i am suffering from overflowing values before the mod can take place.
+		  //		  temp=(unsigned int)pow(backup[i],j)%value;//need to write the sum-square function, i am suffering from overflowing values before the mod can take place.
+		  temp=squareMult(backup[i],j,value);
 		  //HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-		  if(DEBUG)printf("%d^%d mod %d = Order Element:%d\r\n",backup[i],j,value,temp);
+		  printf("%u^%d mod %u = Order Element:%u\r\n",backup[i],j,value,temp);
 		  *((*(elementOrders-1))+(j-1))=temp;
 		  if(temp==1&&j!=1&&orderElementCount==phi)
 		    {
 		      *(generators++)=backup[i];//if the value is 1, this element is in the generator set.
-		      if(DEBUG)printf("Generator:%d; Z*%d is cyclic group\r\n",backup[i],value);
+		      printf("Generator:%d; Z*%d is cyclic group\r\n",backup[i],value);
 		      if(phi%orderElementCount==0)
 			{
 			  *(possibleElementOrders++)=orderElementCount;//add orderElementCount to a possibleElementOrders[]
-			  printf("%d is an element order. %d in possibleElementOrders[]\r\n",orderElementCount,*(possibleElementOrders-1));
+			  //	  if((value-1)%backup[i]==0)
+			    printf("order(%u)=%d=the number of elements in this order.\r\n",backup[i],orderElementCount);
 			}
 		      if(DEBUG)printf("Order(%d)=%d\r\n\r\n",backup[i],orderElementCount);
 		      break;//break from loop
@@ -87,7 +89,8 @@ int main(int argc, char *argv[])
 		      if(phi%orderElementCount==0)
 			{
 			  *(possibleElementOrders++)=orderElementCount;//add orderElementCount to a possibleElementOrders[]
-			  printf("%d is an element order. %d in possibleElementOrders[]\r\n",orderElementCount,*(possibleElementOrders-1));
+			  //			  if((value-1)%backup[i]==0)
+			    printf("order(%u)=%d=the number of elements in this order.\r\n",backup[i],orderElementCount);
 			}
 		      if(DEBUG)printf("Order(%d)=%d\r\n\r\n",backup[i],orderElementCount);
 		      break;//this element of G is not a generator
@@ -100,22 +103,12 @@ int main(int argc, char *argv[])
 	printf("PossibleElementOrders:\r\n");
 	printf("1\r\n");
 	for(i=0;possibleElementOrdersBase[i]!='\0';i++)
-	  {
+	  {//do not print a number if it has already been printed
 	    printf("%d\r\n",possibleElementOrdersBase[i]);
 	  }
-	/*
-	if(DEBUG)printf("debug squareMult=%x\r\n",squareMult(2,1,value));
-	if(DEBUG)printf("debug squareMult=%x\r\n",squareMult(2,2,value));
-	if(DEBUG)printf("debug squareMult=%x\r\n",squareMult(2,3,value));
-	if(DEBUG)printf("debug squareMult=%x\r\n",squareMult(2,4,value));
-	if(DEBUG)printf("debug squareMult=%x\r\n",squareMult(2,5,value));
-	*/
-	if(DEBUG)printf("math.h=%u\tdebug squareMult=%u\r\n",(unsigned int)pow(3,4)%11,squareMult(3,4,value));
-	if(DEBUG)printf("math.h=%u\tdebug squareMult=%u\r\n",(unsigned int)pow(2,16)%11,squareMult(2,16,value));
-	if(DEBUG)printf("math.h=%u\tdebug squareMult=%u\r\n",(unsigned int)pow(2,64)%11,squareMult(2,64,value));
-	if(DEBUG)printf("math.h=%u\tdebug squareMult=%u\r\n",(unsigned int)pow(2,199)%11,squareMult(2,199,value));
 	return 0;
 }
+
 unsigned int squareMult(unsigned int base, unsigned int exponent,int modulus)
 {
   unsigned int retval=0;
@@ -126,7 +119,7 @@ unsigned int squareMult(unsigned int base, unsigned int exponent,int modulus)
     {
       if((exponent&mask)>0)
 	{
-	  printf(".");
+	  //	  printf(".");
 	  if(DEBUG)printf("index=%d\r\n",index);
 	  //	  return index;//have found the first non-zero bit in exponent
 	  break;
