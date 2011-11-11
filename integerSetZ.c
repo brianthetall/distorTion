@@ -18,7 +18,7 @@ int main(int argc, char *argv[])
 	char *s;
 	unsigned int i,j,value;
 	unsigned int phi=0,*elements,*backup,*generators,*generatorsBase,**elementOrders,**elementOrdersBase;
-	unsigned int temp,orderElementCount;
+	unsigned int temp,orderElementCount,*possibleElementOrders,*possibleElementOrdersBase;
 	FILE *in,*out;
 	if(argc!=ARGS)
 		{
@@ -48,6 +48,8 @@ int main(int argc, char *argv[])
 	generatorsBase=generators;
 	elementOrders=(unsigned int **)calloc(phi,sizeof(unsigned int*));//alloc elementOrders[phi][phi]
 	elementOrdersBase=elementOrders;
+	possibleElementOrders=(unsigned int*)calloc(phi,sizeof(unsigned int));
+	possibleElementOrdersBase=possibleElementOrders;
 	for(i=0;backup[i]!='\0';i++)
 	  {
 	    *(elementOrders++)=(unsigned int*)calloc(phi,sizeof(unsigned int));
@@ -58,7 +60,7 @@ int main(int argc, char *argv[])
 	      {
 		if(backup[i]==1)
 		  {
-		    printf("%d is the identity of the Group\r\n",backup[i]);
+		    printf("%d is the identity of the Group\r\n\r\n",backup[i]);
 		    break;
 		  }
 		else{
@@ -71,17 +73,37 @@ int main(int argc, char *argv[])
 		    {
 		      *(generators++)=backup[i];//if the value is 1, this element is in the generator set.
 		      if(DEBUG)printf("Generator:%d; Z*%d is cyclic group\r\n",backup[i],value);
+		      if(phi%orderElementCount==0)
+			{
+			  *(possibleElementOrders++)=orderElementCount;//add orderElementCount to a possibleElementOrders[]
+			  printf("%d is an element order. %d in possibleElementOrders[]\r\n",orderElementCount,*(possibleElementOrders-1));
+			}
+		      if(DEBUG)printf("Order(%d)=%d\r\n\r\n",backup[i],orderElementCount);
 		      break;//break from loop
 		    }
 		  else if(temp==1)
 		    {
+		      if(phi%orderElementCount==0)
+			{
+			  *(possibleElementOrders++)=orderElementCount;//add orderElementCount to a possibleElementOrders[]
+			  printf("%d is an element order. %d in possibleElementOrders[]\r\n",orderElementCount,*(possibleElementOrders-1));
+			}
+		      if(DEBUG)printf("Order(%d)=%d\r\n\r\n",backup[i],orderElementCount);
 		      break;//this element of G is not a generator
 		    }
 		}
 		
 	      }
 	    
-	    
+	  }
+	
+	printf("PossibleElementOrders:\r\n");
+	//	possibleElementOrdersBase[0]=1;
+	//	printf("%d\r\n",possibleElementOrdersBase[0]);
+	printf("1\r\n");
+	for(i=0;possibleElementOrdersBase[i]!='\0';i++)
+	  {
+	    printf("%d\r\n",possibleElementOrdersBase[i]);
 	  }
 	return 0;
 }
