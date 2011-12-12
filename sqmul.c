@@ -5,7 +5,7 @@
 #include <string.h>
 #include <math.h>
 #define ARGS 4
-#define DEBUG 1
+#define DEBUG 0
 #define LINE 255
 
 int findFirst1(int exp);//return the first MSB-position that is a 1
@@ -23,7 +23,7 @@ int main(int argc,char *argv[])
   modulus=atoi(argv[3]);
   if(DEBUG)printf("n=%d\texp=%d\tmod=%d\r\n",number,exponent,modulus);
   //  printf("DEBUG find first=%d\r\n",findFirst1(exponent));
-  squareMultiply(number,exponent,modulus);
+  printf("%d\r\n",squareMultiply(number,exponent,modulus));
   return 0;
 }
 
@@ -43,7 +43,9 @@ int squareMultiply(int number,int exp,int mod)
       if((exp&(1<<i)) > 0)//only multiply if the bit is a 1
 	{
 	  retval*=number;
-	  printf("AfterMultiply=%d\r\n",retval);
+	  retval%=mod;
+	  if(DEBUG)
+	    printf("AfterMultiply=%d\r\n",retval);
 	}
     }
   return retval;
@@ -54,7 +56,8 @@ int findFirst1(int exp)
   int i,retval=0;
   for(i=0;i<(8*sizeof(int));i++)
     {
-      //      printf("%d ",exp & (1<<i));
+      if(DEBUG)
+	printf("%d ",exp & (1<<i));
       if((exp&(1<<i)) > 0)
 	retval=i;
     }
